@@ -8,7 +8,7 @@ import requests
 BOT_TOKEN = '7133328183:AAEbno9akd-k7WxQdK9k2uNomi5DYzlCrC0'
 
 # Ваш API ключ от Instagram
-INSTAGRAM_TOKEN = 'IGQWRPNDlMa2stLUpOWDRxX1djeEhfOF9pN3M5aWdlN3J0cjk0cVRnQThYM1FwNVRWQjFCNmhGYXo3RUdZARVc4VDEtU1MxSV9Gb2VxNFhzM2VzZAXoyZAXRidUlIa1UxaU52ZA21QNVhxQXhPaHJWTmFJMHlTcU11dFkZD'
+INSTAGRAM_TOKEN = 'IGQWROLU1ha2oybEJ3Nnl2Qkxfb2hKZA2IxenB1Y3ZAyYWVka3F0eElWUmNZAMElJejd0MnV5ZA1BiTXQ5YXBaS2JtTFNOOHlzLWFiemdSWVFSM3lveldoX18zUE8tWThiZAUNLM0UtYU5IOThPZAHJIVjFCQ2E2RlJjWlEZD'
 
 logging.basicConfig(level=logging.INFO)
 
@@ -42,7 +42,11 @@ async def search_in_instagram(message: types.Message):
     if response.status_code == 200:
         # Если запрос успешен, отправляем пользователю результат
         result = response.json()
-        await message.answer(f"Результаты поиска в Instagram: {result}")
+        for post in result['data']:
+            caption = post.get('caption', 'No caption available')
+            photos = [photo['url'] for photo in post.get('images', [])]
+            for photo in photos:
+                await message.answer_photo(photo, caption=caption)
     else:
         await message.answer("Произошла ошибка при выполнении запроса к Instagram")
 
